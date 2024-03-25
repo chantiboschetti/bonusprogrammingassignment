@@ -65,138 +65,134 @@ void printArray(int pData[], int dataSz)
 }
 
 // Implementation of selection sort
-void selectionSort(int* pData, int n)
-{
-    for (int i = 0; i < n - 1; i++) {
-        int min_index = i;
-        for (int j = i + 1; j < n; j++) {
-            if (pData[j] < pData[min_index]) {
-                min_index = j;
+void selectionSort(int* array, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < size; j++) {
+            if (array[j] < array[minIndex]) {
+                minIndex = j;
             }
         }
-        if (min_index != i) {
-            int temp = pData[i];
-            pData[i] = pData[min_index];
-            pData[min_index] = temp;
+        if (minIndex != i) {
+            int temp = array[i];
+            array[i] = array[minIndex];
+            array[minIndex] = temp;
         }
     }
 }
 
 // Implementation of insertion sort
-void insertionSort(int* pData, int n)
-{
-    for (int i = 1; i < n; i++) {
-        int key = pData[i];
+void insertionSort(int* array, int size) {
+    for (int i = 1; i < size; i++) {
+        int key = array[i];
         int j = i - 1;
-        while (j >= 0 && pData[j] > key) {
-            pData[j + 1] = pData[j];
+        while (j >= 0 && array[j] > key) {
+            array[j + 1] = array[j];
             j = j - 1;
         }
-        pData[j + 1] = key;
+        array[j + 1] = key;
     }
 }
 
 // Implementation of bubble sort
-void bubbleSort(int* pData, int n)
-{
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (pData[j] > pData[j + 1]) {
-                int temp = pData[j];
-                pData[j] = pData[j + 1];
-                pData[j + 1] = temp;
+void bubbleSort(int* array, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (array[j] > array[j + 1]) {
+                int temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
             }
         }
     }
 }
 
 // Implementation of merge sort
-void merge(int arr[], int l, int m, int r) {
-    int n1 = m - l + 1;
-    int n2 = r - m;
+void merge(int arr[], int left, int middle, int right) {
+    int leftSize = middle - left + 1;
+    int rightSize = right - middle;
 
-    int L[n1], R[n2];
+    int leftArray[leftSize];
+    int rightArray[rightSize];
 
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[m + 1 + j];
+    for (int i = 0; i < leftSize; i++)
+        leftArray[i] = arr[left + i];
+    for (int j = 0; j < rightSize; j++)
+        rightArray[j] = arr[middle + 1 + j];
 
     int i = 0;
     int j = 0;
-    int k = l;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
+    int k = left;
+    while (i < leftSize && j < rightSize) {
+        if (leftArray[i] <= rightArray[j]) {
+            arr[k] = leftArray[i];
             i++;
         } else {
-            arr[k] = R[j];
+            arr[k] = rightArray[j];
             j++;
         }
         k++;
     }
 
-    while (i < n1) {
-        arr[k] = L[i];
+    while (i < leftSize) {
+        arr[k] = leftArray[i];
         i++;
         k++;
     }
 
-    while (j < n2) {
-        arr[k] = R[j];
+    while (j < rightSize) {
+        arr[k] = rightArray[j];
         j++;
         k++;
     }
 }
 
-void mergeSorting(int arr[], int l, int r) {
-    if (l < r) {
-        int m = l + (r - l) / 2;
+void mergeSortHelper(int arr[], int left, int right) {
+    if (left < right) {
+        int middle = left + (right - left) / 2;
 
-        mergeSorting(arr, l, m);
-        mergeSorting(arr, m + 1, r);
+        mergeSortHelper(arr, left, middle);
+        mergeSortHelper(arr, middle + 1, right);
 
-        merge(arr, l, m, r);
+        merge(arr, left, middle, right);
     }
 }
 
-void mergeSort(int pData[], int l, int r)
-{
-    mergeSorting(pData, l, r);
+void mergeSort(int array[], int left, int right) {
+    mergeSortHelper(array, left, right);
 }
 
-// Implementation heap sort
-// extraMemoryAllocated counts bytes of extra memory allocated
-void heap(int arr[], int n, int i) {
-    int largest = i;
-    int l = 2 * i + 1;
-    int r = 2 * i + 2;
+// Implementation of heap sort
+void heaping(int arr[], int size, int index) {
+    int largest = index;
+    int leftChild = 2 * index + 1;
+    int rightChild = 2 * index + 2;
 
-    if (l < n && arr[l] > arr[largest])
-        largest = l;
+    if (leftChild < size && arr[leftChild] > arr[largest])
+        largest = leftChild;
 
-    if (r < n && arr[r] > arr[largest])
-        largest = r;
+    if (rightChild < size && arr[rightChild] > arr[largest])
+        largest = rightChild;
 
-    if (largest != i) {
-        int temp = arr[i];
-        arr[i] = arr[largest];
+    if (largest != index) {
+        int temp = arr[index];
+        arr[index] = arr[largest];
         arr[largest] = temp;
 
-        heap(arr, n, largest);
+        heaping(arr, size, largest);
     }
 }
 
-void heapSort(int arr[], int n) {
-    for (int i = n / 2 - 1; i >= 0; i--)
-        heap(arr, n, i);
+void heapSort(int arr[], int size) {
+    for (int i = size / 2 - 1; i >= 0; i--)
+        heaping(arr, size, i);
 
-    for (int i = n - 1; i > 0; i--) {
+    for (int i = size - 1; i > 0; i--) {
         int temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
 
-        heap(arr, i, 0);
+        heaping(arr, i, 0);
     }
 }
 
@@ -278,7 +274,7 @@ int main(void)
 
         DeAlloc(pDataCopy);
         DeAlloc(pDataSrc);
-        }
-
-        return 0;
     }
+
+    return 0;
+}
